@@ -23,13 +23,35 @@ function RegisterPage() {
       setError('Please fill in all fields');
       return;
     }
+
+    try {
+// Suggested code may be subject to a license. Learn more: ~LicenseLog:1498234901.
+      const res = await fetch('http://localhost:3005/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+      if (res.ok) {
+        const form = e.target;
+        setError('');
+        form.reset();
+        console.log("success")
+      } else {
+        setError('Failed to register');
+      }
+    
+    } catch (error) {
+      console.log("error during registration", error)
+    }
   }
     return (
       <div>
         <Navbar />
         RegisterPage
         <div className='container mx-auto mt-4'>
-          <form onSubmit={handleSubmit}>
+          <form>
             {error && <p className="text-red-500">{error}</p>}
             <input onChange={(e) => setName(e.target.value)} className="block bg-gray-300 p-2 my-2 rounded-md" type="text" name="name" placeholder="name" />
             <input
@@ -41,7 +63,10 @@ function RegisterPage() {
             <input
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="block bg-gray-300 p-2 my-2 rounded-md" type="password" name="confirm password" placeholder="confirm password" />
-            <button type="submit" className='bg-gray-300 p-2 my-2 rounded-md'>Register</button>
+            <button
+              onSubmit={handleSubmit} 
+              type="submit" className='bg-gray-300 p-2 my-2 rounded-md'>
+                Register</button>
           </form>
           <p className="a">
             go to <Link href="/login" className="text-blue-500 hover:underline">login</Link></p>
